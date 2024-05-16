@@ -15,7 +15,6 @@ import java.io.Serializable;
 public class HashTag {
 
     @EmbeddedId
-    @Column(name = "post_seq")
     private Pk pk;
 
     @MapsId("postSeq")
