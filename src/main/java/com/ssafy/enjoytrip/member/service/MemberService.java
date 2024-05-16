@@ -4,6 +4,7 @@ import com.ssafy.enjoytrip.error.CommonErrorCode;
 import com.ssafy.enjoytrip.error.exception.UserExistException;
 import com.ssafy.enjoytrip.member.domain.Member;
 import com.ssafy.enjoytrip.member.dto.MemberRequestDto;
+import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
 import com.ssafy.enjoytrip.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,4 +32,7 @@ public class MemberService {
         return member.getId();
     }
 
+    public MemberResponseDto findMemberById(String memberId) {
+        return memberRepository.findMemberById(memberId);
+    }
 }
