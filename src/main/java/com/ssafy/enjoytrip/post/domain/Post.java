@@ -24,11 +24,11 @@ public class Post extends BaseTime {
     private Long likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_seq")
+    @JoinColumn(name = "member_seq", nullable = false)
     private Member writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_seq")
+    @JoinColumn(name = "place_seq", nullable = false)
     private Place place;
 
 }

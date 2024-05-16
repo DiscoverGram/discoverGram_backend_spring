@@ -20,13 +20,16 @@ public class Comment extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_seq")
-    private String commentSeq;
+    private Long commentSeq;
 
-    @JoinColumn(name = "post_seq")
+    @JoinColumn(name = "post_seq", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "memberSeq")
+    @JoinColumn(name = "memberSeq", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member memberSeq;
+
+    @Column(nullable = false)
+    private String content;
 }
