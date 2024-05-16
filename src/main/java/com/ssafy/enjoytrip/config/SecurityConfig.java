@@ -39,6 +39,11 @@ public class SecurityConfig {
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
             )
+            .logout(httpSecurityLogoutConfigurer -> {
+                httpSecurityLogoutConfigurer.logoutSuccessUrl("/");
+                httpSecurityLogoutConfigurer.deleteCookies();
+                httpSecurityLogoutConfigurer.permitAll();
+            })
             .authenticationManager(authenticationManager)
             .addFilter(corsConfig.corsFilter())
                 .addFilter(new AuthenticationFilter(authenticationManager))

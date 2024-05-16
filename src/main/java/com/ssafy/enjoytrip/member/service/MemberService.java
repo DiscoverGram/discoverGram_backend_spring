@@ -30,4 +30,5 @@ public class MemberService {
 
         return member.getId();
     }
+
 }

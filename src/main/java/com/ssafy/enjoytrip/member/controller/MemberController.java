@@ -24,4 +24,5 @@ public class MemberController {
         memberService.signUp(memberRequestDto);
         return ResponseEntity.ok("회원가입완료");
     }
+
 }

@@ -32,13 +32,19 @@ class PrincipalDetailsServiceTest {
     PasswordEncoder passwordEncoder;
     ObjectMapper objectMapper = new ObjectMapper();
     LoginRequestDto loginRequestDto;
+    LoginRequestDto notMatchedPasswordRequestDto;
     Member member;
+
 
     @BeforeEach
     void init(){
         loginRequestDto = LoginRequestDto.builder()
                 .id("userId")
                 .password("1234")
+                .build();
+        notMatchedPasswordRequestDto = LoginRequestDto.builder()
+                .id("userId")
+                .password("1111")
                 .build();
         member = Member.builder()
                 .id("userId")
@@ -47,10 +53,8 @@ class PrincipalDetailsServiceTest {
                 .role("ROLE_USER")
                 .build();
     }
-
-
     @Test
-    @DisplayName("로그인")
+    @DisplayName("로그인 성공")
     public void login() throws Exception{
         memberRepository.save(member);
         mvc.perform(post("/login")
@@ -61,12 +65,21 @@ class PrincipalDetailsServiceTest {
             .andExpect(status().isOk());
     }
     @Test
-    @DisplayName("로그아웃")
-    public void logout() throws Exception{
-        mvc.perform(delete("/logout")
+    @DisplayName("잘못된 비밀번호로 로그인")
+    public void NotMatchedPassword() throws Exception{
+        memberRepository.save(member);
+        mvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(notMatchedPasswordRequestDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    @DisplayName("로그아웃")
+    public void logout() throws Exception{
+        mvc.perform(post("/logout"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
     }
 }
