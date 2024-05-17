@@ -4,6 +4,7 @@ import com.ssafy.enjoytrip.error.CommonErrorCode;
 import com.ssafy.enjoytrip.error.exception.BindingException;
 import com.ssafy.enjoytrip.member.dto.MemberRequestDto;
 import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.member.dto.MemberUpdateDto;
 import com.ssafy.enjoytrip.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +18,22 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping(value = "sign-up")
+    @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody MemberRequestDto memberRequestDto, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
         memberService.signUp(memberRequestDto);
         return ResponseEntity.ok("회원가입완료");
     }
 
-    @GetMapping(value = "member")
-    public MemberResponseDto memberDetail(@RequestParam String memberId){
-        return memberService.findMemberById(memberId);
+    @GetMapping("/members/{memberSeq}")
+    public MemberResponseDto memberDetail(@RequestParam Long memberSeq){
+        return memberService.findById(memberSeq);
+    }
+
+    @PutMapping("/members/{memberSeq}")
+    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto, BindingResult bindingResult, @PathVariable("memberId") Long memberSeq) {
+        if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
+        memberService.updateMember(memberUpdateDto, memberSeq);
+        return ResponseEntity.ok("수정완료");
     }
 }

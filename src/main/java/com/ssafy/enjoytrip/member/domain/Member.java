@@ -1,6 +1,8 @@
 package com.ssafy.enjoytrip.member.domain;
 
 import com.ssafy.enjoytrip.member.dto.MemberRequestDto;
+import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "members")
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_seq")
@@ -29,4 +32,17 @@ public class Member {
     @Column(nullable = false)
     private String role;
 
+    public void update(MemberUpdateDto memberUpdateDto){
+        name = memberUpdateDto.getName();
+        password = memberUpdateDto.getPassword();
+    }
+
+    public MemberResponseDto toResponseDto(){
+        return MemberResponseDto.builder()
+                .seq(seq)
+                .id(id)
+                .password(password)
+                .name(name)
+                .build();
+    }
 }
