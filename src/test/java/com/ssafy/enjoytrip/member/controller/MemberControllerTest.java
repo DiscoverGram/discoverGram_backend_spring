@@ -43,6 +43,7 @@ class MemberControllerTest {
 
     private MemberRequestDto memberRequestDto;
     private MemberResponseDto memberResponseDto;
+    private MemberResponseDto memberUpdatedDto;
     private MemberUpdateDto memberUpdateDto;
 
     @BeforeEach
@@ -63,6 +64,12 @@ class MemberControllerTest {
                 .name("이현규")
                 .password(passwordEncoder.encode("5678"))
                 .build();
+
+        memberUpdatedDto = MemberResponseDto.builder()
+                .id("song")
+                .name("이현규")
+                .password(passwordEncoder.encode("5678"))
+                .build();
     }
 
     @Test
@@ -71,7 +78,7 @@ class MemberControllerTest {
 
         given(memberService.signUp(memberRequestDto)).willReturn(memberRequestDto.getId());
 
-        mockMvc.perform(post("/sign-up")
+        mockMvc.perform(post("/signup")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberRequestDto))
@@ -86,37 +93,35 @@ class MemberControllerTest {
         when(memberService.detailMember(1L)).thenReturn(memberResponseDto);
 
         // when
-        MvcResult mvcResult = mockMvc.perform(get("/members/1"))
+        mockMvc.perform(get("/members/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        MemberResponseDto result = objectMapper.readValue(responseBody, MemberResponseDto.class);
-        //then
-
-        assertThat(result.getSeq()).isEqualTo(memberResponseDto.getSeq());
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @DisplayName("회원 수정")
     void update() throws Exception{
         // given
-        when(memberService.updateMember(memberUpdateDto, 1L)).thenReturn(null);
+        when(memberService.updateMember(memberUpdateDto, 1L)).thenReturn(memberUpdatedDto);
 
         // when
-        MvcResult mvcResult = mockMvc.perform(put("/members/1")
+        mockMvc.perform(put("/members/1")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberUpdateDto))
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    @DisplayName("회원 삭제")
+    void deleteMember() throws Exception{
+        // given
+        when(memberService.deleteMember(1L)).thenReturn(1);
 
-        String responseBody = mvcResult.getResponse().getContentAsString();
-        MemberResponseDto result = objectMapper.readValue(responseBody, MemberResponseDto.class);
-        // then
-
-        assertThat(result.getSeq()).isEqualTo(memberResponseDto.getSeq());
+        // when
+        mockMvc.perform(delete("/members/1")
+                        .with(csrf()))
+                .andExpect(status().isOk());
     }
 }

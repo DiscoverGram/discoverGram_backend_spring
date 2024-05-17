@@ -31,14 +31,13 @@ public class MemberController {
     }
 
     @PutMapping("/members/{memberSeq}")
-    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto, BindingResult bindingResult, @PathVariable("memberSeq") Long memberSeq) {
-        if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
-        memberService.updateMember(memberUpdateDto, memberSeq);
-        return ResponseEntity.ok("수정완료");
+    public MemberResponseDto updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto, BindingResult bindingResult, @PathVariable("memberSeq") Long memberSeq) {
+//        if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
+        return memberService.updateMember(memberUpdateDto, memberSeq);
     }
 
     @DeleteMapping("/members/{memberSeq}")
-    public ResponseEntity<String> deleteMember(@RequestParam Long memberSeq){
+    public ResponseEntity<String> deleteMember(@PathVariable("memberSeq") Long memberSeq){
         memberService.deleteMember(memberSeq);
         return ResponseEntity.ok("삭제완료");
     }

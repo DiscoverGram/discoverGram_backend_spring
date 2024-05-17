@@ -94,23 +94,10 @@ class MemberServiceTest {
         assertThat(expect).isEqualTo(responseDto.getName());
     }
 
-    @Test
-    @DisplayName("회원 삭제")
-    void delete() throws Exception{
-        // given
-        when(memberRepository.findBySeq(1L)).thenReturn(Optional.of(member));
-//        doNothing().when(memberRepository).delete(member);
-
-        // when
-        int result = memberService.deleteMember(1L);
-
-        // then
-        assertThat(result).isEqualTo(1);
-    }
 
     @Test
     @DisplayName("회원 수정")
-    void update() throws Exception{
+    void update() throws Exception {
         // given
         when(memberRepository.findBySeq(1L)).thenReturn(Optional.of(member));
         MemberResponseDto expect = MemberResponseDto.builder()
@@ -127,4 +114,19 @@ class MemberServiceTest {
         assertThat(result.getName()).isEqualTo(expect.getName());
         assertThat(result.getPassword()).isEqualTo(expect.getPassword());
     }
+
+    @Test
+    @DisplayName("회원 삭제")
+    void delete() throws Exception{
+        // given
+        when(memberRepository.findBySeq(1L)).thenReturn(Optional.of(member));
+//        doNothing().when(memberRepository).delete(member);
+
+        // when
+        int result = memberService.deleteMember(1L);
+
+        // then
+        assertThat(result).isEqualTo(1);
+    }
+
 }
