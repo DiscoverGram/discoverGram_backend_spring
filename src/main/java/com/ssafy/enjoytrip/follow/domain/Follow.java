@@ -11,10 +11,10 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "follows")
 public class Follow {
 
     @EmbeddedId
-    @Column(name = "post_seq")
     private Pk pk;
 
     @MapsId("followMemberSeq")

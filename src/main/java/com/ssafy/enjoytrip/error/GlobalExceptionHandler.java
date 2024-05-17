@@ -1,6 +1,5 @@
 package com.ssafy.enjoytrip.error;
 
-import com.ssafy.enjoytrip.error.ErrorCode;
 import com.ssafy.enjoytrip.error.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,13 +25,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotMatchedWriterException.class)
-    public ResponseEntity<Object> notMatchedWriter(NotFoundUserException e) {
+    public ResponseEntity<Object> notMatchedWriter(NotMatchedWriterException e) {
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
 
-    @ExceptionHandler(NotFoundArticleException.class)
-    public ResponseEntity<Object> notFoundArticle(NotFoundUserException e) {
+    @ExceptionHandler(NotFoundPostException.class)
+    public ResponseEntity<Object> notFoundArticle(NotFoundPostException e) {
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }

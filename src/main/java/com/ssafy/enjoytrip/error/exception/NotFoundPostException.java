@@ -6,6 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class NotFoundArticleException extends RuntimeException{
+public class NotFoundPostException extends RuntimeException{
     final ErrorCode errorCode;
 }
