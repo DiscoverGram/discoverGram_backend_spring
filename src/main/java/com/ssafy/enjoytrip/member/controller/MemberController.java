@@ -26,12 +26,12 @@ public class MemberController {
     }
 
     @GetMapping("/members/{memberSeq}")
-    public MemberResponseDto detailMember(@RequestParam Long memberSeq){
+    public MemberResponseDto detailMember(@PathVariable("memberSeq") Long memberSeq){
         return memberService.detailMember(memberSeq);
     }
 
     @PutMapping("/members/{memberSeq}")
-    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto, BindingResult bindingResult, @PathVariable("memberId") Long memberSeq) {
+    public ResponseEntity<String> updateMember(@Valid @RequestBody MemberUpdateDto memberUpdateDto, BindingResult bindingResult, @PathVariable("memberSeq") Long memberSeq) {
         if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
         memberService.updateMember(memberUpdateDto, memberSeq);
         return ResponseEntity.ok("수정완료");
