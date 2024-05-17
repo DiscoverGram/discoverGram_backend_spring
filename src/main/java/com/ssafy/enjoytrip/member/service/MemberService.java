@@ -47,4 +47,9 @@ public class MemberService {
         Member member = memberRepository.findBySeq(memberSeq).orElseThrow();
         member.update(memberUpdateDto);
     }
+
+    public void deleteMember(Long memberSeq) {
+        memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
+        memberRepository.deleteById(memberSeq);
+    }
 }

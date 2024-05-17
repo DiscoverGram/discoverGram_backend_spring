@@ -36,4 +36,9 @@ public class MemberController {
         memberService.updateMember(memberUpdateDto, memberSeq);
         return ResponseEntity.ok("수정완료");
     }
+
+    @DeleteMapping("/members/{memberSeq}")
+    public ResponseEntity<String> deleteMember(@RequestParam Long memberSeq){
+        memberService.deleteMember(memberSeq);
+    }
 }

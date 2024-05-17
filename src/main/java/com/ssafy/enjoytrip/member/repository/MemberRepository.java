@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findBySeq(Long seq);
+    Optional<Member> findBySeq(Long memberSeq);
+    Optional<Member> findById(String memberId);
     Boolean existsById(String id);
-
+    void deleteById(Long memberSeq);
 }
