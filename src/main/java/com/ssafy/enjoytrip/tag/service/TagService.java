@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,11 +19,16 @@ public class TagService {
     private final TagRepository tagRepository;
     public TagResponseDto findById(Long tagSeq) {
         Tag tag = tagRepository.findById(tagSeq).orElseThrow();
-        return new TagResponseDto(tag.getTag());
+        return new TagResponseDto(tag.getSeq());
     }
-    public CommonResponseDto createTag(TagRequestDto tagRequestDto) {
-        Tag tag = Tag.builder().tag(tagRequestDto.getTag()).build();
-        tagRepository.save(tag);
-        return new CommonResponseDto("OK");
+
+    public List<TagResponseDto> createTag(TagRequestDto tagRequestDto) {
+        List<TagResponseDto> responseList = new ArrayList<>();
+        for(String tagName : tagRequestDto.getTags()){
+            if(tagRepository.existsTagByTag(tagName)) continue;
+            Tag tag = Tag.builder().tag(tagName).build();
+            responseList.add(new TagResponseDto(tagRepository.save(tag).getSeq()));
+        }
+        return responseList;
     }
 }

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tags")
@@ -15,7 +17,7 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping
-    public ResponseEntity<CommonResponseDto> createTag(@RequestBody TagRequestDto tagRequestDto) {
+    public ResponseEntity<List<TagResponseDto>> createTag(@RequestBody TagRequestDto tagRequestDto) {
         return ResponseEntity.ok(tagService.createTag(tagRequestDto));
     }
     @GetMapping("/{tagId}")
