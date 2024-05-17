@@ -26,8 +26,8 @@ public class MemberController {
     }
 
     @GetMapping("/members/{memberSeq}")
-    public MemberResponseDto memberDetail(@RequestParam Long memberSeq){
-        return memberService.findById(memberSeq);
+    public MemberResponseDto detailMember(@RequestParam Long memberSeq){
+        return memberService.detailMember(memberSeq);
     }
 
     @PutMapping("/members/{memberSeq}")
@@ -40,5 +40,6 @@ public class MemberController {
     @DeleteMapping("/members/{memberSeq}")
     public ResponseEntity<String> deleteMember(@RequestParam Long memberSeq){
         memberService.deleteMember(memberSeq);
+        return ResponseEntity.ok("삭제완료");
     }
 }

@@ -32,9 +32,11 @@ public class Member {
     @Column(nullable = false)
     private String role;
 
-    public void update(MemberUpdateDto memberUpdateDto){
+    public MemberResponseDto update(MemberUpdateDto memberUpdateDto){
         name = memberUpdateDto.getName();
         password = memberUpdateDto.getPassword();
+
+        return toResponseDto();
     }
 
     public MemberResponseDto toResponseDto(){

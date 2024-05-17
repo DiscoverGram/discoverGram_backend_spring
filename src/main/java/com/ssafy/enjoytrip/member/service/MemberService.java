@@ -37,19 +37,19 @@ public class MemberService {
         return member.getId();
     }
 
-    public MemberResponseDto findById(Long memberSeq){
+    public MemberResponseDto detailMember(Long memberSeq){
         Member member = memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
         return member.toResponseDto();
     }
 
-
-    public void updateMember(MemberUpdateDto memberUpdateDto, Long memberSeq) {
+    public MemberResponseDto updateMember(MemberUpdateDto memberUpdateDto, Long memberSeq) {
         Member member = memberRepository.findBySeq(memberSeq).orElseThrow();
-        member.update(memberUpdateDto);
+        return member.update(memberUpdateDto);
     }
 
-    public void deleteMember(Long memberSeq) {
+    public int deleteMember(Long memberSeq) {
         memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
-        memberRepository.deleteById(memberSeq);
+
+        return 1;
     }
 }
