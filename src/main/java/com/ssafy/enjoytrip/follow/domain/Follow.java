@@ -24,8 +24,8 @@ public class Follow {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("followerMemberSeq")
-    @JoinColumn(name = "follower_member_seq")
-    private Member followerMember;
+    @JoinColumn(name = "followed_member_seq")
+    private Member followedMember;
 
     @NoArgsConstructor
     @AllArgsConstructor
@@ -35,7 +35,7 @@ public class Follow {
     public static class Pk implements Serializable {
         @Column(name = "follow_member_seq")
         private Long followMemberSeq;
-        @Column(name = "follower_member_seq")
-        private Long followerMemberSeq;
+        @Column(name = "followed_member_seq")
+        private Long followedMemberSeq;
     }
 }
