@@ -16,7 +16,7 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping("/follows/{followMemberSeq}/{memberSeq}")
-    public ResponseEntity<String> follow(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq) {
+    public ResponseEntity<String> follow(@PathVariable("followMemberSeq") Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq) {
         boolean result = followService.follow(followMemberSeq, memberSeq);
 
         if(result){
@@ -25,8 +25,8 @@ public class FollowController {
         return ResponseEntity.ok("실패");
     }
 
-    @DeleteMapping("/follows/{followMemberSeq}/{memberSeq}")
-    public ResponseEntity<String> deleteFollowing(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
+    @DeleteMapping("/followings/{followMemberSeq}/{memberSeq}")
+    public ResponseEntity<String> deleteFollowing(@PathVariable("followMemberSeq") Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
          boolean result = followService.deleteFollow(followMemberSeq, memberSeq);
 
          if(result){
@@ -35,7 +35,7 @@ public class FollowController {
          return ResponseEntity.ok("실패");
     }
 
-    @DeleteMapping("/follows/{followedMemberSeq}/{memberSeq}")
+    @DeleteMapping("/followers/{followedMemberSeq}/{memberSeq}")
     public ResponseEntity<String> deleteFollower(@PathVariable("followedMemberSeq") Long followedMemberSeq, @PathVariable("memberSeq") Long memberSeq){
         boolean result = followService.deleteFollower(followedMemberSeq, memberSeq);
         
@@ -46,12 +46,12 @@ public class FollowController {
     }
 
 
-    @GetMapping("/following/{memberSeq}")
+    @GetMapping("/followings/{memberSeq}")
     public List<FollowDto> getFollowing(@PathVariable("memberSeq") Long memberSeq){
         return followService.getFollowing(memberSeq);
     }
 
-    @GetMapping("/follower/{memberSeq}")
+    @GetMapping("/followers/{memberSeq}")
     public List<FollowDto> getFollower(@PathVariable("memberSeq") Long memberSeq){
         return followService.getFollower(memberSeq);
     }
