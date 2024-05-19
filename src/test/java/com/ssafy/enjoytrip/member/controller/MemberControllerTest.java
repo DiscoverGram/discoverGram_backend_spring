@@ -1,9 +1,10 @@
 package com.ssafy.enjoytrip.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.enjoytrip.member.dto.MemberRequestDto;
-import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
-import com.ssafy.enjoytrip.member.service.MemberService;
+import com.ssafy.enjoytrip.domain.member.controller.MemberController;
+import com.ssafy.enjoytrip.domain.member.dto.MemberRequestDto;
+import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.domain.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

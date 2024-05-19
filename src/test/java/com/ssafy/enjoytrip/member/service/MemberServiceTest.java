@@ -1,9 +1,10 @@
 package com.ssafy.enjoytrip.member.service;
 
-import com.ssafy.enjoytrip.error.exception.UserExistException;
-import com.ssafy.enjoytrip.member.domain.Member;
-import com.ssafy.enjoytrip.member.dto.MemberRequestDto;
-import com.ssafy.enjoytrip.member.repository.MemberRepository;
+import com.ssafy.enjoytrip.domain.member.service.MemberService;
+import com.ssafy.enjoytrip.global.error.exception.UserExistException;
+import com.ssafy.enjoytrip.domain.member.domain.Member;
+import com.ssafy.enjoytrip.domain.member.dto.MemberRequestDto;
+import com.ssafy.enjoytrip.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

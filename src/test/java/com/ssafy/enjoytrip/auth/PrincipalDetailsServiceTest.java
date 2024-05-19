@@ -1,9 +1,10 @@
 package com.ssafy.enjoytrip.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.enjoytrip.auth.dto.LoginRequestDto;
-import com.ssafy.enjoytrip.member.domain.Member;
-import com.ssafy.enjoytrip.member.repository.MemberRepository;
+import com.ssafy.enjoytrip.global.auth.PrincipalDetailsService;
+import com.ssafy.enjoytrip.global.auth.dto.LoginRequestDto;
+import com.ssafy.enjoytrip.domain.member.domain.Member;
+import com.ssafy.enjoytrip.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultHandler;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
