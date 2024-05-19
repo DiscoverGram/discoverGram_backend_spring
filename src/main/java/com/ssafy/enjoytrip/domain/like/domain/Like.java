@@ -12,7 +12,8 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Likes {
+@Table(name="likes")
+public class Like {
 
     @EmbeddedId
     private Pk pk;
