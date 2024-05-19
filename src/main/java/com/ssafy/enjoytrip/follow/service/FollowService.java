@@ -52,17 +52,17 @@ public class FollowService {
         return true;
     }
 
-    private Follow getMemberFollowedFollow(Long followMemberSeq, Long memberSeq) {
-        Member member = memberRepository.findBySeq(memberSeq)
-                .orElseThrow(() -> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
-        Member followMember = memberRepository.findBySeq(followMemberSeq)
-                .orElseThrow(() -> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
 
-        Follow follow = new Follow().builder()
-                .followMember(followMember)
-                .followedMember(member)
-                .build();
-        return follow;
+    public boolean deleteFollower(Long followedMemberSeq, Long memberSeq) {
+        if(memberSeq == followedMemberSeq){
+            throw new SelfFollowException(CommonErrorCode.SELF_FOLLOW);
+        }
+
+        Follow follow = getMemberFollowedFollow(followedMemberSeq, memberSeq);
+
+        followRepository.delete(follow);
+
+        return true;
     }
 
     public List<FollowDto> getFollowing(Long memberSeq) {
@@ -81,6 +81,21 @@ public class FollowService {
         followerDtoList = followRepository.findFollowerDtoList(followerList);
 
         return followerDtoList;
+    }
+
+
+
+    private Follow getMemberFollowedFollow(Long followMemberSeq, Long memberSeq) {
+        Member member = memberRepository.findBySeq(memberSeq)
+                .orElseThrow(() -> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
+        Member followMember = memberRepository.findBySeq(followMemberSeq)
+                .orElseThrow(() -> new NotFoundUserException(CommonErrorCode.NOT_FOUND_USER));
+
+        Follow follow = new Follow().builder()
+                .followMember(followMember)
+                .followedMember(member)
+                .build();
+        return follow;
     }
 
 }

@@ -30,6 +30,7 @@ public class MemberService {
                 .id(memberRequestDto.getId())
                 .password(passwordEncoder.encode(memberRequestDto.getPassword()))
                 .name(memberRequestDto.getName())
+                .userProfileImage(memberRequestDto.getUserProfileImage())
                 .build();
 
         memberRepository.save(member);

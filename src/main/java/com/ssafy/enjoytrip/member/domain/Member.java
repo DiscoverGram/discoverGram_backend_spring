@@ -31,12 +31,13 @@ public class Member {
     private String name;
     @Column(nullable = false)
     private String role;
-    @Column()
+    @Column
     private String userProfileImage;
 
     public MemberResponseDto update(MemberUpdateDto memberUpdateDto){
         name = memberUpdateDto.getName();
         password = memberUpdateDto.getPassword();
+        userProfileImage = memberUpdateDto.getUserProfileImage();
 
         return toResponseDto();
     }
@@ -47,6 +48,7 @@ public class Member {
                 .id(id)
                 .password(password)
                 .name(name)
+                .userProfileImage(userProfileImage)
                 .build();
     }
 }

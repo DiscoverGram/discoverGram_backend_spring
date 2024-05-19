@@ -34,4 +34,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 팔로워(나를 따르는) 목록 번호
     @Query("SELECT f.followedMember.seq FROM Follow f WHERE f.followMember.seq = :memberSeq")
     List<Long> findFollowerList(@Param("memberSeq") Long memberSeq);
+
+
+    int countByFollowMemberSeq(Long followMemberSeq);
+
+    int countByFollowedMemberSeq(Long followedMemberSeq);
 }

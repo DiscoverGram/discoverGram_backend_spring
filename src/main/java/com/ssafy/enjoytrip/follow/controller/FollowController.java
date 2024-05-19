@@ -26,7 +26,7 @@ public class FollowController {
     }
 
     @DeleteMapping("/follows/{followMemberSeq}/{memberSeq}")
-    public ResponseEntity<String> deleteFollow(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
+    public ResponseEntity<String> deleteFollowing(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
          boolean result = followService.deleteFollow(followMemberSeq, memberSeq);
 
          if(result){
@@ -34,6 +34,17 @@ public class FollowController {
          }
          return ResponseEntity.ok("실패");
     }
+
+    @DeleteMapping("/follows/{followedMemberSeq}/{memberSeq}")
+    public ResponseEntity<String> deleteFollower(@PathVariable("followedMemberSeq") Long followedMemberSeq, @PathVariable("memberSeq") Long memberSeq){
+        boolean result = followService.deleteFollower(followedMemberSeq, memberSeq);
+        
+        if(result){
+            return ResponseEntity.ok("팔로워 삭제 완료");
+        }
+        return ResponseEntity.ok("실패");
+    }
+
 
     @GetMapping("/following/{memberSeq}")
     public List<FollowDto> getFollowing(@PathVariable("memberSeq") Long memberSeq){
