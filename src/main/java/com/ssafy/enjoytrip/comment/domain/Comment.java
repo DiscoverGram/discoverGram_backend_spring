@@ -26,7 +26,7 @@ public class Comment extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "memberSeq", nullable = false)
+    @JoinColumn(name = "member_seq", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member memberSeq;
 
