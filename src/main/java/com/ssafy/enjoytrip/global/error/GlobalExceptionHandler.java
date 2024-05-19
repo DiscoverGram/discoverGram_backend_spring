@@ -1,10 +1,6 @@
 package com.ssafy.enjoytrip.global.error;
 
-import com.ssafy.enjoytrip.error.exception.*;
-import com.ssafy.enjoytrip.global.error.exception.BindingException;
-import com.ssafy.enjoytrip.global.error.exception.NotFoundPostException;
-import com.ssafy.enjoytrip.global.error.exception.NotMatchedWriterException;
-import com.ssafy.enjoytrip.global.error.exception.UserExistException;
+import com.ssafy.enjoytrip.global.error.exception.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,12 +18,16 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
-    @ExceptionHandler(NotFoundUserException.class)
-    public ResponseEntity<Object> notFoundUser(NotFoundUserException e) {
+    @ExceptionHandler(NotFoundMemberException.class)
+    public ResponseEntity<Object> notFoundUser(NotFoundMemberException e) {
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
-
+    @ExceptionHandler(NotFoundCommentException.class)
+    public ResponseEntity<Object> notFoundComment(NotFoundCommentException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return handleExceptionInternal(errorCode);
+    }
     @ExceptionHandler(NotMatchedWriterException.class)
     public ResponseEntity<Object> notMatchedWriter(NotMatchedWriterException e) {
         ErrorCode errorCode = e.getErrorCode();
