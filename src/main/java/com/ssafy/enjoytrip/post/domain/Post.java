@@ -20,9 +20,8 @@ public class Post extends BaseTime {
     private Long seq;
     @Column(length = 500, nullable = false)
     private String content;
-    @ColumnDefault("0")
-    private Long likes;
-
+    @Column(nullable = false)
+    private String thumbnailImage;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_seq", nullable = false)
     private Member writer;
