@@ -39,3 +39,4 @@ src/main/resources
 .gradle
 build/test-results
 build
+.idea
