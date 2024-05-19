@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,16 +42,16 @@ public class SecurityConfig {
             )
             .logout(httpSecurityLogoutConfigurer -> {
                 httpSecurityLogoutConfigurer.logoutSuccessUrl("/");
-                httpSecurityLogoutConfigurer.deleteCookies();
+                httpSecurityLogoutConfigurer.deleteCookies("principal");
                 httpSecurityLogoutConfigurer.permitAll();
             })
             .authenticationManager(authenticationManager)
             .addFilter(corsConfig.corsFilter())
                 .addFilter(new AuthenticationFilter(authenticationManager))
-            .formLogin((formLogin) -> formLogin.disable())
-            .csrf((csrfConfig) -> csrfConfig.disable())
-            .httpBasic((httpBasic) -> httpBasic.disable())
-            .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .formLogin(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .sessionManagement((sessionManagement) -> sessionManagement.sessionFixation().none())
             .build();
     }
 
