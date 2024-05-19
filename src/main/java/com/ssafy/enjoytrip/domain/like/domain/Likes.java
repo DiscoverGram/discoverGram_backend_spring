@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.domain.likes.domain;
+package com.ssafy.enjoytrip.domain.like.domain;
 
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.post.domain.Post;
