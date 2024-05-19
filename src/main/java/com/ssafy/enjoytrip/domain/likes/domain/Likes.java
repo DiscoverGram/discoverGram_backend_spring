@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.domain.likes.domain;
 
+import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,7 +20,7 @@ public class Likes {
     @MapsId("memberSeq")
     @JoinColumn(name = "member_seq")
     @ManyToOne(fetch = FetchType.LAZY)
-    private com.ssafy.enjoytrip.domain.member.domain.Member Member;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("postSeq")
