@@ -18,7 +18,7 @@ public class Place {
     @Column(name = "place_seq")
     private Long seq;
 
-    @Column(nullable = false)
+    @Column(name = "place_name", nullable = false)
     private String placeName;
 
     @Column(nullable = false)
