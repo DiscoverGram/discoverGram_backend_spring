@@ -14,4 +14,5 @@ public class MemberResponseDto {
     private String id;
     private String password;
     private String name;
+    private String userProfileImage;
 }

@@ -1,12 +1,13 @@
 package com.ssafy.enjoytrip.follow.controller;
 
+import com.ssafy.enjoytrip.follow.dto.FollowDto;
 import com.ssafy.enjoytrip.follow.service.FollowService;
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,5 +15,33 @@ public class FollowController {
 
     private final FollowService followService;
 
+    @PostMapping("/follows/{followMemberSeq}/{memberSeq}")
+    public ResponseEntity<String> follow(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq) {
+        boolean result = followService.follow(followMemberSeq, memberSeq);
 
+        if(result){
+            return ResponseEntity.ok("팔로우 완료");
+        }
+        return ResponseEntity.ok("실패");
+    }
+
+    @DeleteMapping("/follows/{followMemberSeq}/{memberSeq}")
+    public ResponseEntity<String> deleteFollow(@PathVariable("followMemberSeq") @NotBlank Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
+         boolean result = followService.deleteFollow(followMemberSeq, memberSeq);
+
+         if(result){
+             return ResponseEntity.ok("언팔로우 완료");
+         }
+         return ResponseEntity.ok("실패");
+    }
+
+    @GetMapping("/following/{memberSeq}")
+    public List<FollowDto> getFollowing(@PathVariable("memberSeq") Long memberSeq){
+        return followService.getFollowing(memberSeq);
+    }
+
+    @GetMapping("/follower/{memberSeq}")
+    public List<FollowDto> getFollower(@PathVariable("memberSeq") Long memberSeq){
+        return followService.getFollower(memberSeq);
+    }
 }

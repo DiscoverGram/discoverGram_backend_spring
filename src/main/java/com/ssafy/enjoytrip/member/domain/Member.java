@@ -27,10 +27,12 @@ public class Member {
     private String id;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private String role;
+    @Column()
+    private String userProfileImage;
 
     public MemberResponseDto update(MemberUpdateDto memberUpdateDto){
         name = memberUpdateDto.getName();

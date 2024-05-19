@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class MemberUpdateDto {
     private String name;
     private String password;
+    private String userProfileImage;
 }
 
