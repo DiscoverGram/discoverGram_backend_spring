@@ -2,6 +2,8 @@ package com.ssafy.enjoytrip.domain.post.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -12,4 +14,6 @@ public class PostResponseDto {
     private String thumbnailImage;
     private String writer;
     private String placeName;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }

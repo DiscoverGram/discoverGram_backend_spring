@@ -1,11 +1,15 @@
 package com.ssafy.enjoytrip.domain.post.domain;
 
+import com.ssafy.enjoytrip.domain.image.domain.Image;
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.place.domain.Place;
 import com.ssafy.enjoytrip.domain.post.dto.PostResponseDto;
 import com.ssafy.enjoytrip.global.common.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,6 +34,10 @@ public class Post extends BaseTime {
     @JoinColumn(name = "place_seq", nullable = false)
     private Place place;
 
+    // cascade = CascadeType.ALL : 부모 엔티티(board)에서 생성, 업데이트, 삭제되면 image도 동일하게 처리
+    // orphanRemoval = true : 부모 엔티티(board)에서 image를 참조 제거하면 image엔티티에서도 DB에서 삭제
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Image> images = new ArrayList<>();
     public static PostResponseDto PostToDto(Post post){
         return PostResponseDto.builder()
                 .postSeq(post.getSeq())
