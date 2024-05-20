@@ -1,6 +1,9 @@
 package com.ssafy.enjoytrip.domain.member.service;
 
+import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.domain.member.dto.MemberUpdateDto;
 import com.ssafy.enjoytrip.global.error.CommonErrorCode;
+import com.ssafy.enjoytrip.global.error.exception.NotFoundMemberException;
 import com.ssafy.enjoytrip.global.error.exception.UserExistException;
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.member.dto.MemberRequestDto;
@@ -31,4 +34,19 @@ public class MemberService {
         return member.getId();
     }
 
+    public MemberResponseDto detailMember(Long memberSeq){
+        Member member = memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));
+        return member.toResponseDto();
+    }
+
+    public MemberResponseDto updateMember(MemberUpdateDto memberUpdateDto, Long memberSeq) {
+        Member member = memberRepository.findBySeq(memberSeq).orElseThrow();
+        return member.update(memberUpdateDto);
+    }
+
+    public int deleteMember(Long memberSeq) {
+        memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));
+
+        return 1;
+    }
 }

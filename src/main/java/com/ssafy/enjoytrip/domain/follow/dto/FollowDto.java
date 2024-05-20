@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.domain.member.dto;
+package com.ssafy.enjoytrip.domain.follow.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponseDto {
-    private Long seq;
-    private String id;
-    private String password;
+@NoArgsConstructor
+@Builder
+public class FollowDto {
     private String name;
     private String userProfileImage;
 }

@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.domain.member.domain;
 
+import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.domain.member.dto.MemberUpdateDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +25,24 @@ public class Member {
     private String name;
     @Column(nullable = false)
     private String role;
+    @Column
+    private String userProfileImage;
 
+    public MemberResponseDto update(MemberUpdateDto memberUpdateDto){
+        name = memberUpdateDto.getName();
+        password = memberUpdateDto.getPassword();
+        userProfileImage = memberUpdateDto.getUserProfileImage();
+
+        return toResponseDto();
+    }
+
+    public MemberResponseDto toResponseDto(){
+        return MemberResponseDto.builder()
+                .seq(seq)
+                .id(id)
+                .password(password)
+                .name(name)
+                .userProfileImage(userProfileImage)
+                .build();
+    }
 }

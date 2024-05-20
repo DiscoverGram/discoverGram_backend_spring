@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.domain.comment.domain;
 
+import com.ssafy.enjoytrip.domain.comment.dto.CommentRequestDto;
+import com.ssafy.enjoytrip.domain.comment.dto.CommentResponseDto;
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.global.common.BaseTime;
 import com.ssafy.enjoytrip.domain.post.domain.Post;
@@ -28,8 +30,19 @@ public class Comment extends BaseTime {
 
     @JoinColumn(name = "member_seq", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member memberSeq;
+    private Member member;
 
     @Column(nullable = false)
     private String content;
+
+    public void update(CommentRequestDto commentRequestDto){
+        this.content = commentRequestDto.getContent();
+    }
+    public static CommentResponseDto CommentToDto(Comment comment){
+        return CommentResponseDto.builder()
+                .commentSeq(comment.commentSeq)
+                .commentWriter(comment.member.getName())
+                .content(comment.content)
+                .build();
+    }
 }
