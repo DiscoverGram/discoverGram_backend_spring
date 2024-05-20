@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "images")
 public class Image {
     @EmbeddedId
@@ -34,6 +35,6 @@ public class Image {
         @Column(name = "post_seq")
         private Long postSeq;
         @Column(name = "image_uuid")
-        private Long imageUuid;
+        private String imageUuid;
     }
 }
