@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -15,4 +17,6 @@ public class CommentResponseDto {
     private Long commentSeq;
     private String commentWriter;
     private String content;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }
