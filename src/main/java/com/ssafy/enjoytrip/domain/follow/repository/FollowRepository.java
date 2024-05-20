@@ -19,6 +19,6 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.Pk> {
     List<Follow> findFollowList(@Param("memberSeq") Long memberSeq);
 
 
-    int countFollowByFollowMember_Seq(Long followMemberSeq);
-    int countFollowByFollowedMember_Seq(Long followedMemberSeq);
+    Long countFollowByFollowMember_Seq(Long followMemberSeq);
+    Long countFollowByFollowedMember_Seq(Long followedMemberSeq);
 }

@@ -144,10 +144,10 @@ class FollowRepositoryTest {
     @Transactional
     void countByFollowMemberSeq() {
         // given
-        int expect = 1;
+        Long expect = 1L;
 
         // when
-        int actualCount = followRepository.countFollowByFollowMember_Seq(followMember.getSeq());
+        Long actualCount = followRepository.countFollowByFollowMember_Seq(followMember.getSeq());
 
         // then
         assertThat(actualCount).isEqualTo(expect);
@@ -158,10 +158,10 @@ class FollowRepositoryTest {
     @Transactional
     void testCountByFollowedMemberSeq() {
         // given
-        int expect = 1;
+        Long expect = 1L;
 
         // when
-        int actualCount = followRepository.countFollowByFollowedMember_Seq(followedMember.getSeq());
+        Long actualCount = followRepository.countFollowByFollowedMember_Seq(followedMember.getSeq());
 
         // then
         assertThat(actualCount).isEqualTo(expect);
