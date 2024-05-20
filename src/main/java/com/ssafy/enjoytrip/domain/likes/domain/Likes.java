@@ -1,0 +1,40 @@
+package com.ssafy.enjoytrip.domain.likes.domain;
+
+import com.ssafy.enjoytrip.domain.post.domain.Post;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Getter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Likes {
+
+    @EmbeddedId
+    private Pk pk;
+
+    @MapsId("memberSeq")
+    @JoinColumn(name = "member_seq")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private com.ssafy.enjoytrip.domain.member.domain.Member Member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("postSeq")
+    @JoinColumn(name = "post_seq")
+    private Post post;
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @Getter
+    @Embeddable
+    public static class Pk implements Serializable {
+        @Column(name = "member_seq")
+        private Long memberSeq;
+        @Column(name = "post_seq")
+        private Long postSeq;
+    }
+}

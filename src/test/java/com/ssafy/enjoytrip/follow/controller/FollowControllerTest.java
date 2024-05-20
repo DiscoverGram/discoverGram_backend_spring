@@ -1,9 +1,9 @@
-package com.ssafy.enjoytrip.follow.controller;
+package com.ssafy.enjoytrip.follow.controller;//package com.ssafy.enjoytrip.follow.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.enjoytrip.follow.dto.FollowDto;
-import com.ssafy.enjoytrip.follow.service.FollowService;
-import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
+import com.ssafy.enjoytrip.domain.follow.controller.FollowController;
+import com.ssafy.enjoytrip.domain.follow.dto.FollowDto;
+import com.ssafy.enjoytrip.domain.follow.service.FollowService;
+import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,16 +19,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(FollowController.class)
 @ExtendWith(SpringExtension.class)
@@ -53,7 +49,8 @@ class FollowControllerTest {
                 .build();
 
         followDto = FollowDto.builder()
-                .memberResponseDto(memberResponseDto)
+                .name("followUser")
+                .userProfileImage("src")
                 .build();
 
         followDtoList = Arrays.asList(followDto);

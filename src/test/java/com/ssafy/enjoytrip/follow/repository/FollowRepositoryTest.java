@@ -1,88 +1,87 @@
-package com.ssafy.enjoytrip.follow.repository;
+package com.ssafy.enjoytrip.follow.repository;//package com.ssafy.enjoytrip.follow.repository;
 
-import com.ssafy.enjoytrip.follow.domain.Follow;
-import com.ssafy.enjoytrip.follow.dto.FollowDto;
-import com.ssafy.enjoytrip.member.domain.Member;
-import com.ssafy.enjoytrip.member.dto.MemberResponseDto;
-import jakarta.transaction.Transactional;
+import com.ssafy.enjoytrip.domain.follow.domain.Follow;
+import com.ssafy.enjoytrip.domain.follow.dto.FollowDto;
+import com.ssafy.enjoytrip.domain.follow.repository.FollowRepository;
+import com.ssafy.enjoytrip.domain.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
 class FollowRepositoryTest {
 
-    @Mock
-    private FollowRepository followRepository;
+    @Autowired
+    TestEntityManager em;
+    @Autowired
+    FollowRepository followRepository;
 
-    private Member member;
+
+    private Member followedMember;
     private Member followMember;
     private Follow follow;
     private FollowDto followDto;
+    private FollowDto followedDto;
 
     private Long followMemberSeq = 2L;
-    private Long memberSeq = 1L;
+    private Long followedMemberSeq = 1L;
 
     @BeforeEach
     void init() {
-        member = Member.builder()
-                .seq(1L)
-                .id("user1")
-                .name("John Doe")
+        // follow <- member
+        followMember = Member.builder()
+                .id("user2")
+                .name("member")
                 .password("password")
+                .role("USER")
                 .build();
 
-        followMember = Member.builder()
-                .seq(2L)
-                .id("user2")
-                .name("Jane Smith")
+        followedMember = Member.builder()
+                .id("user1")
+                .name("followed")
                 .password("password")
+                .role("USER")
                 .build();
 
         follow = Follow.builder()
+                .pk(new Follow.Pk(1L, 2L))
                 .followMember(followMember)
-                .followedMember(member)
-                .build();
-
-        followRepository.save(follow);
-
-        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
-                .seq(followMember.getSeq())
-                .id(followMember.getId())
-                .name(followMember.getName())
+                .followedMember(followedMember)
                 .build();
 
         followDto = FollowDto.builder()
-                .memberResponseDto(memberResponseDto)
+                .name("member")
+                .userProfileImage("src")
                 .build();
 
-        followMemberSeq = 2L;
-        memberSeq = 1L;
+        followedDto = FollowDto.builder()
+                .name("followed")
+                .userProfileImage("src")
+                .build();
+
+        em.persist(followMember);
+        em.persist(followedMember);
+        em.persistAndFlush(follow);
     }
 
     @Test
     @DisplayName("팔로잉 체크")
-    void existsByFollowMemberSeqAndMemberSeq() {
+    void existsByFollowMember_SeqAndFollowedMember_Seq() {
         // given
 
         // when
-        boolean exists = followRepository.existsByFollowMemberSeqAndMemberSeq(followMemberSeq, memberSeq);
+        boolean exists = followRepository.existsByFollowMember_SeqAndFollowedMember_Seq(1L, 2L);
 
         // then
         assertThat(exists).isTrue();
@@ -90,57 +89,38 @@ class FollowRepositoryTest {
 
 
     @Test
-    @DisplayName("팔로잉 seq 출력")
+    @DisplayName("팔로잉 리스트 출력")
     void findFollowingList() {
         // given
-        List<Long> expect = Arrays.asList(followMemberSeq);
+        List<FollowDto> expect = Arrays.asList(followedDto);
 
         // when
-        List<Long> actualFollowingList = followRepository.findFollowingList(memberSeq);
+        // followed가 following에 있음.
+        List<Follow> followList = followRepository.findFollowedList(followedMemberSeq);
+        List<FollowDto> result = new ArrayList<>();
+        for (Follow follow1 : followList) {
+            result.add(follow1.followedToDto());
+        }
 
         // then
-        assertThat(actualFollowingList).isEqualTo(expect);
+        assertThat(result.get(0).getName()).isEqualTo(expect.get(0).getName());
     }
 
     @Test
-    @DisplayName("팔로잉Dto 출력")
-    void findFollowingDtoList() {
-        // given
-        List<Long> followedMemberSeqList = Arrays.asList(followMemberSeq);
-        List<FollowDto> expect = Arrays.asList(followDto);
-
-        // when
-        List<FollowDto> actualFollowingDtoList = followRepository.findFollowingDtoList(followedMemberSeqList);
-
-        // then
-        assertThat(actualFollowingDtoList).isEqualTo(expect);
-    }
-
-    @Test
-    @DisplayName("팔로워 seq 출력")
-    void findFollowerList() {
-        // given
-        List<Long> expect = Arrays.asList(memberSeq);
-
-        // when
-        List<Long> actualFollowerList = followRepository.findFollowerList(followMemberSeq);
-
-        // then
-        assertThat(actualFollowerList).isEqualTo(expect);
-    }
-
-    @Test
-    @DisplayName("팔로워Dto 출력")
+    @DisplayName("팔로워 리스트 출력")
     void findFollowerDtoList() {
         // given
-        List<Long> followMemberSeqList = Arrays.asList(memberSeq);
-        List<FollowDto> expect = Arrays.asList(followDto);
+        List<FollowDto> expect = Arrays.asList(followedDto);
 
         // when
-        List<FollowDto> actualFollowerDtoList = followRepository.findFollowerDtoList(followMemberSeqList);
+        List<Follow> followList = followRepository.findFollowList(followMemberSeq);
+        List<FollowDto> result = new ArrayList<>();
+        for (Follow follow1 : followList) {
+            result.add(follow1.followedToDto());
+        }
 
         // then
-        assertThat(actualFollowerDtoList).isEqualTo(expect);
+        assertThat(result.get(0).getName()).isEqualTo(expect.get(0).getName());
     }
 
 
@@ -151,7 +131,7 @@ class FollowRepositoryTest {
         int expect = 1;
 
         // when
-        int actualCount = followRepository.countByFollowMemberSeq(memberSeq);
+        int actualCount = followRepository.countByFollowMemberSeq(followedMemberSeq);
 
         // then
         assertThat(actualCount).isEqualTo(expect);
