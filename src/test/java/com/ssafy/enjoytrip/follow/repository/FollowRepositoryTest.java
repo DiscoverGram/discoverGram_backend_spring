@@ -4,6 +4,7 @@ import com.ssafy.enjoytrip.domain.follow.domain.Follow;
 import com.ssafy.enjoytrip.domain.follow.dto.FollowDto;
 import com.ssafy.enjoytrip.domain.follow.repository.FollowRepository;
 import com.ssafy.enjoytrip.domain.member.domain.Member;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +36,9 @@ class FollowRepositoryTest {
     private Follow follow;
     private FollowDto followDto;
     private FollowDto followedDto;
-
-    private Long followMemberSeq = 2L;
-    private Long followedMemberSeq = 1L;
+//
+//    private Long followMemberSeq = 2L;
+//    private Long followedMemberSeq = 1L;
 
     @BeforeEach
     void init() {
@@ -54,11 +57,7 @@ class FollowRepositoryTest {
                 .role("USER")
                 .build();
 
-        follow = Follow.builder()
-                .pk(new Follow.Pk(1L, 2L))
-                .followMember(followMember)
-                .followedMember(followedMember)
-                .build();
+
 
         followDto = FollowDto.builder()
                 .name("member")
@@ -72,16 +71,30 @@ class FollowRepositoryTest {
 
         em.persist(followMember);
         em.persist(followedMember);
+
+        follow = Follow.builder()
+                .pk(new Follow.Pk(followMember.getSeq(), followedMember.getSeq()))
+                .followMember(followMember)
+                .followedMember(followedMember)
+                .build();
         em.persistAndFlush(follow);
     }
 
+    @AfterEach
+    public void end(){
+        System.out.println("follow = " + follow.getFollowedMember().getSeq());
+        System.out.println("follow = " + follow.getFollowMember().getSeq());
+    }
+
+
     @Test
     @DisplayName("팔로잉 체크")
+    @Transactional
     void existsByFollowMember_SeqAndFollowedMember_Seq() {
         // given
 
         // when
-        boolean exists = followRepository.existsByFollowMember_SeqAndFollowedMember_Seq(1L, 2L);
+        boolean exists = followRepository.existsByFollowMember_SeqAndFollowedMember_Seq(followMember.getSeq(), followedMember.getSeq());
 
         // then
         assertThat(exists).isTrue();
@@ -90,13 +103,14 @@ class FollowRepositoryTest {
 
     @Test
     @DisplayName("팔로잉 리스트 출력")
+    @Transactional
     void findFollowingList() {
         // given
         List<FollowDto> expect = Arrays.asList(followedDto);
 
         // when
         // followed가 following에 있음.
-        List<Follow> followList = followRepository.findFollowedList(followedMemberSeq);
+        List<Follow> followList = followRepository.findFollowedList(followMember.getSeq());
         List<FollowDto> result = new ArrayList<>();
         for (Follow follow1 : followList) {
             result.add(follow1.followedToDto());
@@ -108,12 +122,13 @@ class FollowRepositoryTest {
 
     @Test
     @DisplayName("팔로워 리스트 출력")
+    @Transactional
     void findFollowerDtoList() {
         // given
         List<FollowDto> expect = Arrays.asList(followedDto);
 
         // when
-        List<Follow> followList = followRepository.findFollowList(followMemberSeq);
+        List<Follow> followList = followRepository.findFollowList(followedMember.getSeq());
         List<FollowDto> result = new ArrayList<>();
         for (Follow follow1 : followList) {
             result.add(follow1.followedToDto());
@@ -126,12 +141,13 @@ class FollowRepositoryTest {
 
     @Test
     @DisplayName("팔로잉 숫자세기")
+    @Transactional
     void countByFollowMemberSeq() {
         // given
         int expect = 1;
 
         // when
-        int actualCount = followRepository.countByFollowMemberSeq(followedMemberSeq);
+        int actualCount = followRepository.countFollowByFollowMember_Seq(followMember.getSeq());
 
         // then
         assertThat(actualCount).isEqualTo(expect);
@@ -139,12 +155,13 @@ class FollowRepositoryTest {
 
     @Test
     @DisplayName("팔로워 숫자세기")
+    @Transactional
     void testCountByFollowedMemberSeq() {
         // given
         int expect = 1;
 
         // when
-        int actualCount = followRepository.countByFollowedMemberSeq(followMemberSeq);
+        int actualCount = followRepository.countFollowByFollowedMember_Seq(followedMember.getSeq());
 
         // then
         assertThat(actualCount).isEqualTo(expect);
