@@ -28,6 +28,11 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = e.getErrorCode();
         return handleExceptionInternal(errorCode);
     }
+    @ExceptionHandler(NotFoundLikeException.class)
+    public ResponseEntity<Object> notFoundLike(NotFoundLikeException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return handleExceptionInternal(errorCode);
+    }
     @ExceptionHandler(NotMatchedWriterException.class)
     public ResponseEntity<Object> notMatchedWriter(NotMatchedWriterException e) {
         ErrorCode errorCode = e.getErrorCode();
