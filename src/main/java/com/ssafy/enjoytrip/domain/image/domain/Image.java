@@ -5,13 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "images")
 public class Image {
     @EmbeddedId
@@ -36,5 +36,19 @@ public class Image {
         private Long postSeq;
         @Column(name = "image_uuid")
         private String imageUuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Image image = (Image) o;
+        return Objects.equals(imageUuid, image.imageUuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(imageUuid);
     }
 }
