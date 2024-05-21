@@ -7,6 +7,7 @@ import com.ssafy.enjoytrip.domain.member.dto.MemberUpdateDto;
 import com.ssafy.enjoytrip.domain.member.repository.MemberRepository;
 import com.ssafy.enjoytrip.domain.member.service.MemberService;
 import com.ssafy.enjoytrip.global.error.exception.UserExistException;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@Transactional
 class MemberServiceTest {
     @Mock
     MemberRepository memberRepository;

@@ -38,6 +38,11 @@ public class Post extends BaseTime {
     // orphanRemoval = true : 부모 엔티티(board)에서 image를 참조 제거하면 image엔티티에서도 DB에서 삭제
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images = new ArrayList<>();
+
+    public void addImage(String thumbnailImage) {
+        this.thumbnailImage = thumbnailImage;
+    }
+
     public static PostResponseDto PostToDto(Post post){
         return PostResponseDto.builder()
                 .postSeq(post.getSeq())

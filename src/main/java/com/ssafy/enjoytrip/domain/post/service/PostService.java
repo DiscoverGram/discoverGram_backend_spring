@@ -31,10 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,12 +55,18 @@ public class PostService {
                 .writer(member)
                 .place(place)
                 .build();
-        Long postSeq = postRepository.save(post).getSeq();
+        Long postSeq = 0L;
         List<String> rollbackKeyList = new ArrayList<>();
         try {
             for (MultipartFile file : files) {
+
                 UUID uuid = UUID.randomUUID();
                 String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+                String key = uuid + "." + extension;
+                if(Objects.isNull(post.getThumbnailImage())){
+                    post.addImage(key);
+                    postSeq = postRepository.save(post).getSeq();
+                }
                 ObjectMetadata metadata= new ObjectMetadata();
                 metadata.setContentType(file.getContentType());
                 metadata.setContentLength(file.getSize());
@@ -72,17 +75,18 @@ public class PostService {
                         .imageUuid(uuid.toString())
                         .extension(extension)
                         .build();
-                String key = uuid + "." + extension;
+
+
                 amazonS3Client.putObject(bucket, key, file.getInputStream(),metadata);
                 rollbackKeyList.add(key);
                 imageRepository.save(image);
             }
             return new CommonResponseDto("OK");
         } catch (IOException e) {
-            e.printStackTrace();
             for (String key : rollbackKeyList) {
                 amazonS3Client.deleteObject(bucket, key);
             }
+            e.printStackTrace();
             return new CommonResponseDto("파일 업로드중 오류가 발생 하였습니다.");
         }
     }
@@ -143,7 +147,6 @@ public class PostService {
             }
             return new CommonResponseDto("파일 업로드중 오류가 발생 하였습니다.");
         }
-        post.
     }
     public Member getMember(){
         String userName = AuthenticationUtil.authenticationGetUsername();

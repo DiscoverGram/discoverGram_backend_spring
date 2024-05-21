@@ -8,6 +8,7 @@ import com.ssafy.enjoytrip.domain.post.repository.PostRepository;
 import com.ssafy.enjoytrip.domain.post.domain.Post;
 import com.ssafy.enjoytrip.global.common.CommonResponseDto;
 import com.ssafy.enjoytrip.global.error.CommonErrorCode;
+import com.ssafy.enjoytrip.global.error.exception.NotFoundLikeException;
 import com.ssafy.enjoytrip.global.error.exception.NotFoundMemberException;
 import com.ssafy.enjoytrip.global.error.exception.NotFoundPostException;
 import com.ssafy.enjoytrip.global.util.AuthenticationUtil;
@@ -34,10 +35,11 @@ public class LikeService {
         return new CommonResponseDto("OK");
     }
     public CommonResponseDto deletePost(Long postSeq, Long memberSeq){
-        Like like = likeRepository.findById(new Like.Pk(postSeq, memberSeq)).orElseThrow()
+        Like like = likeRepository.findById(new Like.Pk(postSeq, memberSeq)).orElseThrow(() -> new NotFoundLikeException(CommonErrorCode.NOT_FOUND_LIKE));
         likeRepository.delete(like);
         return new CommonResponseDto("OK");
     }
+
     public Member getMember(){
         String userName = AuthenticationUtil.authenticationGetUsername();
         return memberRepository.findByName(userName).orElseThrow(() -> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));

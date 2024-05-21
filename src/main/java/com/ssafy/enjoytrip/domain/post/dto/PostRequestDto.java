@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostRequestDto {
     private String content;
-    private String thumbnailImage;
     private String placeName;
 }

@@ -37,7 +37,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getNewsFeed(memberSeq, pageable));
     }
     @PutMapping("/{postSeq}")
-    public ResponseEntity<List<PostResponseDto>> updatePost(@PathVariable Long postSeq, @RequestBody PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
+    public ResponseEntity<CommonResponseDto> updatePost(@PathVariable Long postSeq, @RequestBody PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
         return ResponseEntity.ok(postService.update(postSeq, postRequestDto, files));
     }
 }

@@ -20,6 +20,7 @@ public class PostNewsfeedDto {
     private String placeName;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
+    private Long likes;
     private List<Comment> commentList;
     private List<String> imageList;
 }

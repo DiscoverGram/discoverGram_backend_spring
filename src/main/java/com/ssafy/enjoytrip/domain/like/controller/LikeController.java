@@ -17,6 +17,6 @@ public class LikeController {
 
     @DeleteMapping("/post/{postSeq}/like")
     public ResponseEntity<CommonResponseDto> deletePost(@PathVariable Long postSeq, @PathVariable("memberSeq") Long memberSeq) {
-        return ResponseEntity.ok(likeService.likePost(postSeq, memberSeq));
+        return ResponseEntity.ok(likeService.deletePost(postSeq, memberSeq));
     }
 }
