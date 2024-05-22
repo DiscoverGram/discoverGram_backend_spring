@@ -13,5 +13,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Page<Post>> findByWriter_Seq(Long memberSeq, Pageable pageable);
     @Query("SELECT p FROM Post p JOIN Follow f ON p.writer.seq = f.followedMember.seq WHERE f.followMember.seq = ?1")
-    Optional<Page<Post>> findByNewsfeed(Long memberSeq, Pageable pageable);
+    Optional<Page<Post>> findByMemberSeq(Long memberSeq, Pageable pageable);
 }

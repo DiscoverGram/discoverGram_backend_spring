@@ -16,7 +16,9 @@ public enum CommonErrorCode implements ErrorCode {
     USER_EXIST(HttpStatus.BAD_REQUEST, "User Already Exist"),
     NOT_FOUND_MEMBER(HttpStatus.NO_CONTENT, "Member Not Found Error"),
     NOT_FOUND_COMMENT(HttpStatus.NO_CONTENT, "Comment Not Found Error"),
-    NOT_FOUND_POST(HttpStatus.NO_CONTENT, "Post Not Found Error");
+    NOT_FOUND_POST(HttpStatus.NO_CONTENT, "Post Not Found Error"),
+    SELF_FOLLOW(HttpStatus.BAD_REQUEST, "Can not Follow myself"),
+    ALREADY_FOLLOW(HttpStatus.BAD_REQUEST, "Already Follow This Member");
 
 
     private final HttpStatus httpStatus;

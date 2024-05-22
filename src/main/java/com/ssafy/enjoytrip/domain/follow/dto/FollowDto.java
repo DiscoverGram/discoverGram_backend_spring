@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class FollowDto {
     private String name;
     private String userProfileImage;
+    private Boolean isFollow;
 }

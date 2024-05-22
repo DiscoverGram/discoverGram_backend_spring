@@ -9,12 +9,14 @@ import com.ssafy.enjoytrip.global.error.CommonErrorCode;
 import com.ssafy.enjoytrip.global.error.exception.AlreadyFollowException;
 import com.ssafy.enjoytrip.global.error.exception.NotFoundMemberException;
 import com.ssafy.enjoytrip.global.error.exception.SelfFollowException;
+import com.ssafy.enjoytrip.global.util.AuthenticationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -25,7 +27,7 @@ public class FollowService {
     private final MemberRepository memberRepository;
 
     public boolean follow(Long memberSeq, Long followedMemberSeq) {
-        if(memberSeq == followedMemberSeq){
+        if(Objects.equals(memberSeq, followedMemberSeq)){
             throw new SelfFollowException(CommonErrorCode.SELF_FOLLOW);
         }
 
@@ -41,7 +43,7 @@ public class FollowService {
     }
 
     public boolean deleteFollow(Long memberSeq, Long followedMemberSeq) {
-        if(memberSeq == followedMemberSeq){
+        if(Objects.equals(memberSeq, followedMemberSeq)){
             throw new SelfFollowException(CommonErrorCode.SELF_FOLLOW);
         }
 
@@ -54,7 +56,7 @@ public class FollowService {
 
 
     public boolean deleteFollower(Long memberSeq, Long followedMemberSeq) {
-        if(memberSeq == followedMemberSeq){
+        if(Objects.equals(memberSeq, followedMemberSeq)){
             throw new SelfFollowException(CommonErrorCode.SELF_FOLLOW);
         }
 
@@ -67,26 +69,19 @@ public class FollowService {
 
     public List<FollowDto> getFollowing(Long memberSeq) {
         List<Follow> followingList = followRepository.findFollowedList(memberSeq);
-
-        List<FollowDto> followingDtoList = new ArrayList<>();
-
-        for (Follow follow : followingList) {
-            followingDtoList.add(follow.followToDto());
-        }
-
-        return followingDtoList;
+        Member me = getMember();
+        return followingList.stream().map(follow ->
+                follow.followToDto(followRepository.existsByFollowMember_SeqAndFollowedMember_Seq(me.getSeq(), follow.getFollowedMember().getSeq()))
+        ).toList();
     }
 
     public List<FollowDto> getFollower(Long memberSeq) {
         List<Follow> followerList = followRepository.findFollowList(memberSeq);
+        Member me = getMember();
 
-        List<FollowDto> followerDtoList = new ArrayList<>();
-
-        for (Follow follow : followerList) {
-            followerDtoList.add(follow.followedToDto());
-        }
-
-        return followerDtoList;
+        return followerList.stream().map(follow ->
+                follow.followToDto(followRepository.existsByFollowMember_SeqAndFollowedMember_Seq(me.getSeq(), follow.getFollowedMember().getSeq()))
+        ).toList();
     }
 
     private Follow getFollowMemberFollowedMember(Long memberSeq, Long followedMemberSeq) {
@@ -95,11 +90,16 @@ public class FollowService {
         Member followedMember = memberRepository.findBySeq(followedMemberSeq)
                 .orElseThrow(() -> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));
 
-        Follow follow = new Follow().builder()
+        Follow follow = Follow.builder()
+                .pk(new Follow.Pk(memberSeq, followedMemberSeq))
                 .followMember(member)
                 .followedMember(followedMember)
                 .build();
+
         return follow;
     }
-
+    public Member getMember(){
+        String userName = AuthenticationUtil.authenticationGetUsername();
+        return memberRepository.findByName(userName).orElseThrow(() -> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));
+    }
 }

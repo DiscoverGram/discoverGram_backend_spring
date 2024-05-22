@@ -6,6 +6,8 @@ import com.ssafy.enjoytrip.domain.comment.domain.Comment;
 import com.ssafy.enjoytrip.domain.follow.repository.FollowRepository;
 import com.ssafy.enjoytrip.domain.image.domain.Image;
 import com.ssafy.enjoytrip.domain.image.repository.ImageRepository;
+import com.ssafy.enjoytrip.domain.like.domain.Like;
+import com.ssafy.enjoytrip.domain.like.repository.LikeRepository;
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.post.dto.PostNewsfeedDto;
 import com.ssafy.enjoytrip.domain.post.dto.PostRequestDto;
@@ -45,7 +47,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final PlaceRepository placeRepository;
     private final ImageRepository imageRepository;
-    private final FollowRepository followRepository;
+    private final LikeRepository likeRepository;
 
     public CommonResponseDto create(PostRequestDto postRequestDto, List<MultipartFile> files){
         Member member = getMember();
@@ -72,7 +74,6 @@ public class PostService {
                 metadata.setContentLength(file.getSize());
                 Image image = Image.builder()
                         .pk(new Image.Pk(postSeq,uuid.toString()))
-                        .imageUuid(uuid.toString())
                         .extension(extension)
                         .build();
 
@@ -90,8 +91,26 @@ public class PostService {
             return new CommonResponseDto("파일 업로드중 오류가 발생 하였습니다.");
         }
     }
+
+    public PostNewsfeedDto getPostDetail(Long postSeq){
+        Post post = postRepository.findById(postSeq).orElseThrow(() -> new NotFoundPostException(CommonErrorCode.NOT_FOUND_POST));
+        Member member = getMember();
+        return PostNewsfeedDto.builder()
+                .content(post.getContent())
+                        .writer(post.getWriter().getName())
+                        .placeName(post.getPlace().getPlaceName())
+                        .imageList(imageRepository.findByPk_PostSeq(post.getSeq())
+                                .orElse(new ArrayList<>())
+                                .stream()
+                                .map(image -> image.getPk().getImageUuid() + '.' + image.getExtension())
+                                .collect(Collectors.toList()))
+                        .createdDate(post.getCreatedDate())
+                        .updatedDate(post.getUpdatedDate())
+                        .isLike(likeRepository.existsById(new Like.Pk(member.getSeq(), post.getSeq())))
+                        .build();
+    }
     public List<PostNewsfeedDto> getNewsFeed(Long memberSeq, Pageable pageable){
-        Page<Post> posts = postRepository.findByNewsfeed(memberSeq, pageable).orElseThrow(() -> new NotFoundPostException(CommonErrorCode.NOT_FOUND_POST));
+        Page<Post> posts = postRepository.findByMemberSeq(memberSeq, pageable).orElseThrow(() -> new NotFoundPostException(CommonErrorCode.NOT_FOUND_POST));
         return posts.getContent().stream().map(post -> PostNewsfeedDto.builder()
                         .content(post.getContent())
                         .writer(post.getWriter().getName())
@@ -99,54 +118,27 @@ public class PostService {
                         .imageList(imageRepository.findByPk_PostSeq(post.getSeq())
                                 .orElse(new ArrayList<>())
                                 .stream()
-                                .map(image -> image.getImageUuid() + '.' + image.getExtension())
+                                .map(image -> image.getPk().getImageUuid() + '.' + image.getExtension())
                                 .collect(Collectors.toList()))
                         .createdDate(post.getCreatedDate())
                         .updatedDate(post.getUpdatedDate())
+                        .isLike(likeRepository.existsById(new Like.Pk(memberSeq, post.getSeq())))
                         .build())
                 .collect(Collectors.toList());
     }
     public List<PostResponseDto> getFeed(Long memberSeq, Pageable pageable){
         Page<Post> posts = postRepository.findByWriter_Seq(memberSeq, pageable).orElseThrow(() -> new NotFoundPostException(CommonErrorCode.NOT_FOUND_POST));
         return posts.getContent().stream().map(post -> PostResponseDto.builder()
-                        .content(post.getContent())
-                        .writer(post.getWriter().getName())
-                        .placeName(post.getPlace().getPlaceName())
-                        .createdDate(post.getCreatedDate())
-                        .updatedDate(post.getUpdatedDate())
+                        .postSeq(post.getSeq())
+                        .thumbnailImage(post.getThumbnailImage())
                         .build())
                 .collect(Collectors.toList());
     }
-    public CommonResponseDto update(Long postSeq, PostRequestDto postRequestDto, List<MultipartFile> files){
+    public CommonResponseDto update(Long postSeq, PostRequestDto postRequestDto){
         Post post = postRepository.findById(postSeq).orElseThrow(() -> new NotFoundPostException(CommonErrorCode.NOT_FOUND_POST));
-        List<Image> images = imageRepository.findByPk_PostSeq(post.getSeq()).orElse(new ArrayList<>());
-        List<String> rollbackKeyList = new ArrayList<>();
-        try {
-            for (MultipartFile file : files) {
-                UUID uuid = UUID.randomUUID();
-                String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-                String key = uuid + "." + extension;
-                ObjectMetadata metadata= new ObjectMetadata();
-                metadata.setContentType(file.getContentType());
-                metadata.setContentLength(file.getSize());
-                Image image = Image.builder()
-                        .pk(new Image.Pk(postSeq,uuid.toString()))
-                        .imageUuid(uuid.toString())
-                        .extension(extension)
-                        .build();
-
-                amazonS3Client.putObject(bucket, key, file.getInputStream(),metadata);
-                rollbackKeyList.add(key);
-                imageRepository.save(image);
-            }
-            return new CommonResponseDto("OK");
-        } catch (IOException e) {
-            e.printStackTrace();
-            for (String key : rollbackKeyList) {
-                amazonS3Client.deleteObject(bucket, key);
-            }
-            return new CommonResponseDto("파일 업로드중 오류가 발생 하였습니다.");
-        }
+        Place place = placeRepository.findByPlaceName(postRequestDto.getPlaceName()).orElseThrow();
+        post.update(postRequestDto.getContent(), place);
+        return new CommonResponseDto("OK");
     }
     public Member getMember(){
         String userName = AuthenticationUtil.authenticationGetUsername();

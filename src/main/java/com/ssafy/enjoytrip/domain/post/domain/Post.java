@@ -34,15 +34,13 @@ public class Post extends BaseTime {
     @JoinColumn(name = "place_seq", nullable = false)
     private Place place;
 
-    // cascade = CascadeType.ALL : 부모 엔티티(board)에서 생성, 업데이트, 삭제되면 image도 동일하게 처리
-    // orphanRemoval = true : 부모 엔티티(board)에서 image를 참조 제거하면 image엔티티에서도 DB에서 삭제
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Image> images = new ArrayList<>();
-
     public void addImage(String thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
-
+    public void update(String content, Place place){
+        this.content = content;
+        this.place = place;
+    }
     public static PostResponseDto PostToDto(Post post){
         return PostResponseDto.builder()
                 .postSeq(post.getSeq())

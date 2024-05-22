@@ -25,7 +25,7 @@ public class Member {
     private String name;
     @Column(nullable = false)
     private String role;
-    @Column
+    @Column(name = "user_profile_image")
     private String userProfileImage;
 
     public MemberResponseDto update(MemberUpdateDto memberUpdateDto){
@@ -35,7 +35,9 @@ public class Member {
 
         return toResponseDto();
     }
-
+    public void addProfile(String image){
+        this.userProfileImage = image;
+    }
     public MemberResponseDto toResponseDto(){
         return MemberResponseDto.builder()
                 .seq(seq)

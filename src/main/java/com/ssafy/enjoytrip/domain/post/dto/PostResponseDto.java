@@ -12,12 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class PostResponseDto {
     private Long postSeq;
-    private String content;
     private String thumbnailImage;
-    private String writer;
-    private String placeName;
-    private Long likes;
-    private List<Comment> commentList;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
 }

@@ -21,8 +21,6 @@ public class Image {
     @JoinColumn(name = "post_seq")
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
-    @MapsId(value = "imageUuid")
-    private String imageUuid;
     @Column(nullable = false)
     private String extension;
 
@@ -38,17 +36,4 @@ public class Image {
         private String imageUuid;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Image image = (Image) o;
-        return Objects.equals(imageUuid, image.imageUuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(imageUuid);
-    }
 }

@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.member.service.service;
+package com.ssafy.enjoytrip.member.service;
 
 import com.ssafy.enjoytrip.domain.member.domain.Member;
 import com.ssafy.enjoytrip.domain.member.dto.MemberRequestDto;
@@ -6,6 +6,7 @@ import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
 import com.ssafy.enjoytrip.domain.member.dto.MemberUpdateDto;
 import com.ssafy.enjoytrip.domain.member.repository.MemberRepository;
 import com.ssafy.enjoytrip.domain.member.service.MemberService;
+import com.ssafy.enjoytrip.global.common.CommonResponseDto;
 import com.ssafy.enjoytrip.global.error.exception.UserExistException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -33,7 +35,8 @@ class MemberServiceTest {
     PasswordEncoder passwordEncoder;
     @InjectMocks
     MemberService memberService;
-
+    @Mock
+    MultipartFile file;
     MemberRequestDto requestDto;
     Member member;
     MemberResponseDto responseDto;
@@ -68,9 +71,9 @@ class MemberServiceTest {
     void signUp() {
         when(memberRepository.save(any())).thenReturn(member);
 
-        String expect = memberService.signUp(requestDto);
+        CommonResponseDto expect = memberService.signUp(requestDto, file);
 
-        assertThat(expect).isEqualTo(requestDto.getId());
+        assertThat(expect.getResult()).isEqualTo("OK");
     }
 
     @Test
@@ -78,7 +81,7 @@ class MemberServiceTest {
     void AlreadyExistUsername() {
         when(memberRepository.existsById("song")).thenReturn(true);
         UserExistException exception = assertThrows(UserExistException.class,
-                () -> memberService.signUp(requestDto));
+                () -> memberService.signUp(requestDto, file));
 
         String message = exception.getErrorCode().getMessage();
         assertThat(message).isEqualTo("User Already Exist");
@@ -125,10 +128,10 @@ class MemberServiceTest {
 //        doNothing().when(memberRepository).delete(member);
 
         // when
-        int result = memberService.deleteMember(1L);
+        CommonResponseDto result = memberService.deleteMember(1L);
 
         // then
-        assertThat(result).isEqualTo(1);
+        assertThat(result.getResult()).isEqualTo("OK");
     }
 
 }

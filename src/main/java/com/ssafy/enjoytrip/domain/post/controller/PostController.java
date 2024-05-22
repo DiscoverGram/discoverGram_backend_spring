@@ -28,6 +28,10 @@ public class PostController {
     public ResponseEntity<CommonResponseDto> create(@RequestBody PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
         return ResponseEntity.ok(postService.create(postRequestDto, files));
     }
+    @GetMapping("/{postSeq}")
+    public ResponseEntity<PostNewsfeedDto> getPostDetail(@PathVariable Long postSeq){
+        return ResponseEntity.ok(postService.getPostDetail(postSeq));
+    }
     @GetMapping("/feed/{memberSeq}")
     public ResponseEntity<List<PostResponseDto>> getFeed(@PathVariable Long memberSeq, @PageableDefault Pageable pageable){
         return ResponseEntity.ok(postService.getFeed(memberSeq, pageable));
@@ -37,7 +41,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getNewsFeed(memberSeq, pageable));
     }
     @PutMapping("/{postSeq}")
-    public ResponseEntity<CommonResponseDto> updatePost(@PathVariable Long postSeq, @RequestBody PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
-        return ResponseEntity.ok(postService.update(postSeq, postRequestDto, files));
+    public ResponseEntity<CommonResponseDto> updatePost(@PathVariable Long postSeq, @RequestBody PostRequestDto postRequestDto){
+        return ResponseEntity.ok(postService.update(postSeq, postRequestDto));
     }
 }

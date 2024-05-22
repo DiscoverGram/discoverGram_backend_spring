@@ -40,21 +40,21 @@ public class Follow {
         private Long followedMemberSeq;
     }
 
-    public FollowDto followToDto(){
-        FollowDto followDto = FollowDto.builder()
+    public FollowDto followToDto(boolean isFollow){
+
+        return FollowDto.builder()
                 .name(followMember.getName())
                 .userProfileImage(followMember.getUserProfileImage())
+                .isFollow(isFollow)
                 .build();
-
-        return followDto;
     }
 
-    public FollowDto followedToDto(){
-        FollowDto followedDto = FollowDto.builder()
+    public FollowDto followedToDto(boolean isFollow){
+
+        return FollowDto.builder()
                 .name(followedMember.getName())
                 .userProfileImage(followedMember.getUserProfileImage())
+                .isFollow(isFollow)
                 .build();
-
-        return followedDto;
     }
 }

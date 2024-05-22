@@ -21,6 +21,7 @@ public class PostNewsfeedDto {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private Long likes;
+    private Boolean isLike;
     private List<Comment> commentList;
     private List<String> imageList;
 }

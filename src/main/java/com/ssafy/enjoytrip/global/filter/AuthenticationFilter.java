@@ -64,13 +64,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 
-        Cookie cookie = new Cookie("principal", principalDetails.getUsername());
-
-        cookie.setMaxAge(600);
+        Cookie cookie = new Cookie("memberSeq", principalDetails.getSeq()+"");
+        Cookie profileCookie = new Cookie("userProfileImage", principalDetails.getUserProfileImage());
+        cookie.setMaxAge(30);
+        profileCookie.setMaxAge(30);
         cookie.setPath("/");
+        profileCookie.setPath("/");
         response.addCookie(cookie);
-
-        HttpSession session = request.getSession();
-        session.setAttribute(principalDetails.getUsername(), principalDetails);
+        response.addCookie(profileCookie);
     }
 }

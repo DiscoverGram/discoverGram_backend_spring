@@ -32,6 +32,13 @@ public class PrincipalDetails implements UserDetails {
         return member.getName();
     }
 
+    public Long getSeq() {
+        return member.getSeq();
+    }
+    public String getUserProfileImage() {
+        return member.getUserProfileImage();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
