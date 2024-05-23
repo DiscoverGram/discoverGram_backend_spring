@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.domain.post.controller;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.ssafy.enjoytrip.domain.post.domain.Post;
 import com.ssafy.enjoytrip.domain.post.dto.PostNewsfeedDto;
 import com.ssafy.enjoytrip.domain.post.dto.PostRequestDto;
 import com.ssafy.enjoytrip.domain.post.dto.PostResponseDto;
@@ -24,8 +25,16 @@ public class PostController {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    @PostMapping
-    public ResponseEntity<CommonResponseDto> create(@RequestBody PostRequestDto postRequestDto, @RequestPart List<MultipartFile> files){
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<CommonResponseDto> create(@RequestParam("content") String content,
+                                                    @RequestParam(value = "tag",required = false) String tag,
+                                                    @RequestParam(value = "location",required = false) String location,
+                                                    @RequestParam("images") MultipartFile files){
+        PostRequestDto postRequestDto = PostRequestDto.builder()
+                .tag(tag)
+                .content(content)
+                .location(location)
+                .build();
         return ResponseEntity.ok(postService.create(postRequestDto, files));
     }
     @GetMapping("/{postSeq}")

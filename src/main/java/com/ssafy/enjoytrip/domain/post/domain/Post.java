@@ -45,8 +45,6 @@ public class Post extends BaseTime {
         return PostResponseDto.builder()
                 .postSeq(post.getSeq())
                 .thumbnailImage(post.getThumbnailImage())
-                .writer(post.getWriter().getName())
-                .placeName(post.getPlace().getPlaceName())
                 .build();
     }
 }

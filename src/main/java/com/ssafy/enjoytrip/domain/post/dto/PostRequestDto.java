@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostRequestDto {
     private String content;
-    private String placeName;
+    private String tag;
+    private String location;
 }

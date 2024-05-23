@@ -14,10 +14,13 @@ import com.ssafy.enjoytrip.domain.member.dto.MemberRequestDto;
 import com.ssafy.enjoytrip.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,6 +31,7 @@ import java.util.UUID;
 @Transactional
 @RequiredArgsConstructor
 public class MemberService {
+    private static final Logger log = LoggerFactory.getLogger(MemberService.class);
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final MemberRepository memberRepository;
@@ -42,6 +46,7 @@ public class MemberService {
                 .id(memberRequestDto.getId())
                 .password(passwordEncoder.encode(memberRequestDto.getPassword()))
                 .name(memberRequestDto.getName())
+                .role("ROLE_USER")
                 .build();
         String profileImage = UUID.randomUUID() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
 
@@ -52,6 +57,7 @@ public class MemberService {
         metadata.setContentLength(file.getSize());
         try{
             amazonS3Client.putObject(bucket, profileImage, file.getInputStream(),metadata);
+            log.info("들어가유");
         }catch (Exception e){
             e.printStackTrace();
         }

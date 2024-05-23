@@ -10,6 +10,7 @@ import com.ssafy.enjoytrip.global.error.CommonErrorCode;
 import com.ssafy.enjoytrip.global.error.exception.BindingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,15 +18,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-    @PostMapping(value = "/signup")
-    public ResponseEntity<CommonResponseDto> signUp(@RequestPart("memberRequest") MemberRequestDto memberRequestDto, @RequestPart("file") MultipartFile file) {
+    @PostMapping(value = "/signup", consumes = "multipart/form-data")
+    public ResponseEntity<CommonResponseDto> signUp(
+                @RequestParam("id") String id,
+                @RequestParam("password") String password,
+                @RequestParam("name") String name,
+                @RequestParam("file") MultipartFile file) {
 //        if(bindingResult.hasErrors()) throw new BindingException(CommonErrorCode.BINDING_ERROR,bindingResult.getFieldError().getDefaultMessage());
-
+        log.info("아니 왜 안돼");
+        MemberRequestDto memberRequestDto = MemberRequestDto.builder()
+                .id(id)
+                .name(name)
+                .password(password)
+                .build();
         return ResponseEntity.ok(memberService.signUp(memberRequestDto, file));
     }
 
