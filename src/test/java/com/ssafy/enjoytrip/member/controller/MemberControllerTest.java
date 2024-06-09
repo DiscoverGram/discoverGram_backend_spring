@@ -62,7 +62,6 @@ class MemberControllerTest {
         memberResponseDto = MemberResponseDto.builder()
                 .id("song")
                 .name("송도언")
-                .password(passwordEncoder.encode("1234"))
                 .build();
 
         memberUpdateDto = MemberUpdateDto.builder()
@@ -73,7 +72,6 @@ class MemberControllerTest {
         memberUpdatedDto = MemberResponseDto.builder()
                 .id("song")
                 .name("이현규")
-                .password(passwordEncoder.encode("5678"))
                 .build();
 
     }

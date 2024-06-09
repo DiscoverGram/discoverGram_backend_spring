@@ -29,7 +29,7 @@ public class PostController {
     public ResponseEntity<CommonResponseDto> create(@RequestParam("content") String content,
                                                     @RequestParam(value = "tag",required = false) String tag,
                                                     @RequestParam(value = "location",required = false) String location,
-                                                    @RequestParam("images") MultipartFile files){
+                                                    @RequestParam("images") List<MultipartFile> files){
         PostRequestDto postRequestDto = PostRequestDto.builder()
                 .tag(tag)
                 .content(content)

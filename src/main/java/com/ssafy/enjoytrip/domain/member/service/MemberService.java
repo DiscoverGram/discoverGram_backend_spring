@@ -2,6 +2,7 @@ package com.ssafy.enjoytrip.domain.member.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.ssafy.enjoytrip.domain.follow.repository.FollowRepository;
 import com.ssafy.enjoytrip.domain.image.domain.Image;
 import com.ssafy.enjoytrip.domain.member.dto.MemberResponseDto;
 import com.ssafy.enjoytrip.domain.member.dto.MemberUpdateDto;
@@ -37,6 +38,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AmazonS3Client amazonS3Client;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
 
     public CommonResponseDto signUp(MemberRequestDto memberRequestDto, MultipartFile file) {
@@ -68,7 +70,10 @@ public class MemberService {
 
     public MemberResponseDto detailMember(Long memberSeq){
         Member member = memberRepository.findBySeq(memberSeq).orElseThrow(()-> new NotFoundMemberException(CommonErrorCode.NOT_FOUND_MEMBER));
-        return member.toResponseDto();
+        Long followingNum = followRepository.countFollowByFollowMember_Seq(memberSeq);
+        Long followerNum = followRepository.countFollowByFollowedMember_Seq(memberSeq);
+
+        return member.toResponseDto(followingNum, followerNum);
     }
 
     public MemberResponseDto updateMember(MemberUpdateDto memberUpdateDto, Long memberSeq) {

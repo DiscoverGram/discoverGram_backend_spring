@@ -3,8 +3,11 @@ package com.ssafy.enjoytrip.global.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.enjoytrip.global.auth.PrincipalDetails;
 import com.ssafy.enjoytrip.global.auth.dto.LoginRequestDto;
+import com.ssafy.enjoytrip.global.util.AuthenticationUtil;
+import com.ssafy.enjoytrip.global.util.SessionUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,7 +31,7 @@ import java.io.IOException;
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final DelegatingSecurityContextRepository delegatingSecurityContextRepository;
+
     // Authentication 객체 만들어서 리턴 => 의존 : AuthenticationManager
     // 인증 요청시에 실행되는 함수 => /login
     @Override
@@ -56,7 +58,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // UserDetails를 리턴받아서 토큰의 두번째 파라메터(credential)과
         // UserDetails(DB값)의 getPassword()함수로 비교해서 동일하면
         // Authentication 객체를 만들어서 필터체인으로 리턴해준다.
-        log.info("id : {}, password : {}",loginRequestDto.getId(), loginRequestDto.getPassword());
+        log.info("id : {}, password{}",loginRequestDto.getId(), loginRequestDto.getPassword());
         Authentication authentication =
                 authenticationManager.authenticate(authenticationToken);
 
@@ -68,7 +70,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-
+        log.info("principal : {}", principalDetails.getUsername());
 
 
 
@@ -79,28 +81,23 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //                null,     // 패스워드는 모르니까 null 처리, 어차피 지금 인증하는게 아니니까!!
 //                principalDetails.getAuthorities());
 
-        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
-                principalDetails,
-                null,
-                principalDetails.getAuthorities());
-        result.setDetails(principalDetails);
-        Authentication authentication = result;
         HttpSession session = request.getSession(true);
+        session.setAttribute("membername",session.getId());
+        SessionUtil.setSessionId(session.getId(), session);
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
+        context.setAuthentication(authResult);
         SecurityContextHolder.setContext(context);
-        RequestContextHolder.currentRequestAttributes().setAttribute("SPRING_SECURITY_CONTEXT", context, RequestAttributes.SCOPE_SESSION);
-        log.info("레전드 세션 {}" ,RequestAttributes.SCOPE_SESSION);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 
-        log.info("????? {} ",authentication.getPrincipal());
-        log.info("????? {} ",authentication.getName());
-        log.info("????? {} ",authentication.getAuthorities());
-        log.info("????? {} ",authentication.getDetails());
-
-//        String userName = AuthenticationUtil.authenticationGetUsername();
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+//
+//        log.info("????? {} ",authentication.getPrincipal());
+//        log.info("????? {} ",authentication.getName());
+//        log.info("????? {} ",authentication.getAuthorities());
+//        log.info("????? {} ",authentication.getDetails());
+//
+        String userName = AuthenticationUtil.authenticationGetUsername();
+        log.info("username : {}", userName);
         Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
         log.info("레전드 상황 {} ",authentication2.getPrincipal());
         log.info("레전드 상황 {} ",authentication2.isAuthenticated());
@@ -110,6 +107,5 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader("memberSeq", principalDetails.getSeq()+"");
         response.addHeader("userProfileImage", principalDetails.getUserProfileImage());
-
     }
 }

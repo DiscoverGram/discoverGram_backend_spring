@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
     private final LikeService likeService;
     @PostMapping("/post/{postSeq}/like")
-    public ResponseEntity<CommonResponseDto> likePost(@PathVariable Long postSeq, @PathVariable("memberSeq") Long memberSeq) {
-        return ResponseEntity.ok(likeService.likePost(postSeq, memberSeq));
+    public ResponseEntity<CommonResponseDto> likePost(@PathVariable Long postSeq) {
+        return ResponseEntity.ok(likeService.likePost(postSeq, 0L));
     }
 
     @DeleteMapping("/post/{postSeq}/like")
-    public ResponseEntity<CommonResponseDto> deletePost(@PathVariable Long postSeq, @PathVariable("memberSeq") Long memberSeq) {
-        return ResponseEntity.ok(likeService.deletePost(postSeq, memberSeq));
+    public ResponseEntity<CommonResponseDto> deletePost(@PathVariable Long postSeq) {
+        return ResponseEntity.ok(likeService.deletePost(postSeq, 0L));
     }
 }

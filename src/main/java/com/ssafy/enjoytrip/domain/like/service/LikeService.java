@@ -35,7 +35,10 @@ public class LikeService {
         return new CommonResponseDto("OK");
     }
     public CommonResponseDto deletePost(Long postSeq, Long memberSeq){
-        Like like = likeRepository.findById(new Like.Pk(postSeq, memberSeq)).orElseThrow(() -> new NotFoundLikeException(CommonErrorCode.NOT_FOUND_LIKE));
+        Member member = getMember();
+        Long memberSeq2 = member.getSeq();
+        System.out.println(memberSeq2);
+        Like like = likeRepository.findById(new Like.Pk(memberSeq2,postSeq )).orElseThrow(() -> new NotFoundLikeException(CommonErrorCode.NOT_FOUND_LIKE));
         likeRepository.delete(like);
         return new CommonResponseDto("OK");
     }

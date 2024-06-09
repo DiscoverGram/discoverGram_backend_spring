@@ -41,10 +41,12 @@ public class CommentService {
         commentRepository.save(comment);
         return new CommonResponseDto("OK");
     }
+
     public List<CommentResponseDto> findByPostSeq(Long postSeq, Pageable pageable){
         Page<Comment> pages = commentRepository.findAllByPost_Seq(postSeq, pageable).orElseThrow(() -> new NotFoundCommentException(CommonErrorCode.NOT_FOUND_COMMENT));
         return pages.getContent().stream().map(Comment::CommentToDto).collect(Collectors.toList());
     }
+
     public CommentResponseDto updateComment(Long commentSeq, CommentRequestDto commentRequestDto){
         Comment comment = commentRepository.findById(commentSeq).orElseThrow(() -> new NotFoundCommentException(CommonErrorCode.NOT_FOUND_COMMENT));
         comment.update(commentRequestDto);

@@ -38,10 +38,12 @@ public class Comment extends BaseTime {
     public void update(CommentRequestDto commentRequestDto){
         this.content = commentRequestDto.getContent();
     }
+
     public static CommentResponseDto CommentToDto(Comment comment){
         return CommentResponseDto.builder()
                 .commentSeq(comment.commentSeq)
                 .commentWriter(comment.member.getName())
+                .commentWriterSeq(comment.member.getSeq())
                 .content(comment.content)
                 .build();
     }

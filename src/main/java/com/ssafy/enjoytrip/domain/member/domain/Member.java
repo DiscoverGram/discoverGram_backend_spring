@@ -33,18 +33,21 @@ public class Member {
         password = memberUpdateDto.getPassword();
         userProfileImage = memberUpdateDto.getUserProfileImage();
 
-        return toResponseDto();
+        return toResponseDto(null, null);
     }
     public void addProfile(String image){
         this.userProfileImage = image;
     }
-    public MemberResponseDto toResponseDto(){
+
+
+    public MemberResponseDto toResponseDto(Long followingNum, Long followerNum){
         return MemberResponseDto.builder()
                 .seq(seq)
                 .id(id)
-                .password(password)
                 .name(name)
                 .userProfileImage(userProfileImage)
+                .followingNumber(followingNum)
+                .followerNumber(followerNum)
                 .build();
     }
 }

@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class MemberResponseDto {
     private Long seq;
     private String id;
-    private String password;
     private String name;
     private String userProfileImage;
+    private Long followingNumber;
+    private Long followerNumber;
 }

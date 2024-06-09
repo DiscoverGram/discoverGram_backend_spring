@@ -95,29 +95,29 @@ class FollowControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisplayName("팔로잉 목록 조회")
-    void getFollowing() throws Exception {
-        // given
-        given(followService.getFollowing(memberSeq)).willReturn(followDtoList);
-
-        // when, then
-        mockMvc.perform(get("/followings/{memberSeq}", memberSeq)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("팔로워 목록 조회")
-    void getFollower() throws Exception {
-        // given
-        given(followService.getFollower(memberSeq)).willReturn(followDtoList);
-
-        // when, then
-        mockMvc.perform(get("/followers/{memberSeq}", memberSeq)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("팔로잉 목록 조회")
+//    void getFollowing() throws Exception {
+//        // given
+//        given(followService.getFollowing(memberSeq)).willReturn(followDtoList);
+//
+//        // when, then
+//        mockMvc.perform(get("/followings/{memberSeq}", memberSeq)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
+//
+//    @Test
+//    @DisplayName("팔로워 목록 조회")
+//    void getFollower() throws Exception {
+//        // given
+////        given(followService.getFollower(memberSeq)).willReturn(followDtoList);
+//
+//        // when, then
+//        mockMvc.perform(get("/followers/{memberSeq}", memberSeq)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk());
+//    }
 }

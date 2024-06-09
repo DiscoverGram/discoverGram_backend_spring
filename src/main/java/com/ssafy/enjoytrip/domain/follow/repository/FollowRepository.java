@@ -1,11 +1,14 @@
 package com.ssafy.enjoytrip.domain.follow.repository;
 
 import com.ssafy.enjoytrip.domain.follow.domain.Follow;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Follow.Pk> {
     boolean existsByFollowMember_SeqAndFollowedMember_Seq(Long memberSeq, Long followedMemberSeq);
@@ -21,4 +24,7 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.Pk> {
 
     Long countFollowByFollowMember_Seq(Long followMemberSeq);
     Long countFollowByFollowedMember_Seq(Long followedMemberSeq);
+
+    Optional<Page<Follow>> findAllByFollowMember_Seq(Long memberSeq, Pageable pageable);
+    Optional<Page<Follow>> findAllByFollowedMember_Seq(Long memberSeq, Pageable pageable);
 }

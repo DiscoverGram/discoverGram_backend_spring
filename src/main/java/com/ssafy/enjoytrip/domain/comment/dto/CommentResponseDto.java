@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long commentSeq;
     private String commentWriter;
+    private Long commentWriterSeq;
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;

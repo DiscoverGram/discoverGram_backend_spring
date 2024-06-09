@@ -1,8 +1,11 @@
 package com.ssafy.enjoytrip.domain.follow.controller;
 
+import com.ssafy.enjoytrip.domain.comment.dto.CommentResponseDto;
 import com.ssafy.enjoytrip.domain.follow.dto.FollowDto;
 import com.ssafy.enjoytrip.domain.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,12 +49,17 @@ public class FollowController {
 
 
     @GetMapping("/followings/{memberSeq}")
-    public List<FollowDto> getFollowing(@PathVariable("memberSeq") Long memberSeq){
-        return followService.getFollowing(memberSeq);
+    public ResponseEntity<List<FollowDto>> getFollowing(@PathVariable("memberSeq") Long memberSeq, @PageableDefault Pageable pageable){
+        return ResponseEntity.ok(followService.getFollowing(memberSeq, pageable));
     }
 
     @GetMapping("/followers/{memberSeq}")
-    public List<FollowDto> getFollower(@PathVariable("memberSeq") Long memberSeq){
-        return followService.getFollower(memberSeq);
+    public ResponseEntity<List<FollowDto>> getFollower(@PathVariable("memberSeq") Long memberSeq, @PageableDefault Pageable pageable){
+        return ResponseEntity.ok(followService.getFollower(memberSeq, pageable));
+    }
+
+    @GetMapping("/follows/{followMemberSeq}/{memberSeq}")
+    public boolean isFollow(@PathVariable("followMemberSeq") Long followMemberSeq, @PathVariable("memberSeq") Long memberSeq){
+        return followService.isFollow(followMemberSeq, memberSeq);
     }
 }

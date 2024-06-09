@@ -43,6 +43,7 @@ public class Follow {
     public FollowDto followToDto(boolean isFollow){
 
         return FollowDto.builder()
+                .seq(followMember.getSeq())
                 .name(followMember.getName())
                 .userProfileImage(followMember.getUserProfileImage())
                 .isFollow(isFollow)
@@ -52,6 +53,7 @@ public class Follow {
     public FollowDto followedToDto(boolean isFollow){
 
         return FollowDto.builder()
+                .seq(followedMember.getSeq())
                 .name(followedMember.getName())
                 .userProfileImage(followedMember.getUserProfileImage())
                 .isFollow(isFollow)

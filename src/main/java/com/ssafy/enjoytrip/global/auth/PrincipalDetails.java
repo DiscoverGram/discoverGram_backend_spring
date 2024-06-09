@@ -4,12 +4,10 @@ import com.ssafy.enjoytrip.domain.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @AllArgsConstructor
 @Getter
@@ -19,7 +17,9 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(member.getRole()));
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> member.getRole());
+        return authorities;
     }
 
     @Override
